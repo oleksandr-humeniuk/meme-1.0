@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  CreateMemeViewController.swift
 //  Meme
 //
 //  Created by Oleksandr Humeniuk on 9/3/20.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class CreateMemeViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     @IBOutlet
     var cameraButton: UIBarButtonItem!
     @IBOutlet
@@ -17,19 +17,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet
     var bottomTextField: UITextField!
     @IBOutlet
-    var topToolbar: UINavigationBar!
-    @IBOutlet
     var bottomToolbar: UIToolbar!
     
     private let memeTextFieldDelegate = MemeTextFieldDelegate()
     private let memeTextAttributes: [NSAttributedString.Key: Any] = [
-        NSAttributedString.Key.strokeColor: UIColor.black,
-        NSAttributedString.Key.strokeWidth: -3.0,
-        NSAttributedString.Key.foregroundColor: UIColor.white,
-        NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 30),
+        .strokeColor: UIColor.black,
+        .strokeWidth: -3.0,
+        .foregroundColor: UIColor.white,
+        .font: UIFont.boldSystemFont(ofSize: 30),
     ]
     
-    class Strings{
+    struct Strings{
         static let TOP_INITIAL_TEXT = "TOP"
         static let BOTTOM_INITIAL_TEXT = "BOTTOM"
         static let IMAGE_NOT_SET_ALERT = "Choose image to create meme"
@@ -44,10 +42,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         subscribeToKeyboardNotifications()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         unsubscribeFromKeyboardNotifications()
     }
     
@@ -63,9 +63,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBAction
     func resetMeme() {
-        topTextField.text = Strings.TOP_INITIAL_TEXT
-        bottomTextField.text = Strings.BOTTOM_INITIAL_TEXT
-        imageView.image = nil
+        navigateBack()
     }
     
     @IBAction
@@ -79,9 +77,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         activityViewController.completionWithItemsHandler = { (_,completed,_,_) in
             if completed {
                 self.saveMeme(memeImage: generatedMemeImage)
+                self.navigateBack()
             }
         }
         present(activityViewController, animated: true, completion: nil)
+    }
+    
+    private func navigateBack(){
+        navigationController?.popViewController(animated: true)
     }
     
     private func generateMeme() -> UIImage {
@@ -94,12 +97,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return memedImage
     }
     private func saveMeme(memeImage: UIImage){
-        let savedMeme = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: imageView.image!,
+        let savedMeme = Meme(topText: topTextField.text!,
+                             bottomText: bottomTextField.text!,
+                             originalImage: imageView.image!,
                              memeImage: memeImage)
+        (UIApplication.shared.delegate as! AppDelegate).memes.append(savedMeme)
     }
     
     private func prepareUIForMeme(hide:Bool){
-        topToolbar.isHidden = hide
         bottomToolbar.isHidden = hide
     }
     

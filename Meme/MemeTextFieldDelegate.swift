@@ -11,7 +11,7 @@ class MemeTextFieldDelegate: NSObject,UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         let text = textField.text
-        if text == ViewController.Strings.TOP_INITIAL_TEXT || text == ViewController.Strings.BOTTOM_INITIAL_TEXT{
+        if text == CreateMemeViewController.Strings.TOP_INITIAL_TEXT || text == CreateMemeViewController.Strings.BOTTOM_INITIAL_TEXT{
             textField.text = ""
         }
     }

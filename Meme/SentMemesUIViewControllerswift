@@ -1,0 +1,22 @@
+//
+//  SentMemesUIViewController.swift
+//  Meme
+//
+//  Created by Oleksandr Humeniuk on 9/4/20.
+//
+
+import UIKit
+
+class SentMemesUIViewController: UIViewController {
+    struct Strings {
+        fileprivate static let TITLE = ""
+    }
+    
+    private var memes: [Meme] {
+        (UIApplication.shared.delegate as! AppDelegate).memes
+    }
+   
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+}
